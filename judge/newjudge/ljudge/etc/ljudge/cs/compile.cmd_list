@@ -1,0 +1,9 @@
+mcs
+-debug-
+-optimize+
+-r:System.Numerics.dll
+-define:ONLINE_JUDGE
+/opt/newjudge/include/*.cs
+*.cs
+-o
+$exe

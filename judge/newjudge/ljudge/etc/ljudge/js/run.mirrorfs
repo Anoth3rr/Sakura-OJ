@@ -1,0 +1,11 @@
+mkdir /dev
+mkdir /tmp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+#for topcoder 
+mirror /node_modules/
+mirror /usr/local/bin/node{,js}
+touch /hexin-userprint.log

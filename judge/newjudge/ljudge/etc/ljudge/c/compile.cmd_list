@@ -1,0 +1,11 @@
+clang
+-DONLINE_JUDGE
+-Werror=return-type
+-O2
+-Wall
+-std=gnu99
+-pipe
+$src
+-lm
+-o
+$exe

@@ -1,0 +1,16 @@
+mkdir /dev
+mkdir /tmp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+# required by python
+touch /etc/passwd
+mirror /usr/include/python3*/
+# for topcoder
+mirror /usr/local/lib/python*/
+mirror /usr/bin/python{,2*,3*}
+mirror /opt/toolchains/Python-3.9-site-packages/
+mirror /usr/local/bin/python3*
+touch /hexin-userprint.log

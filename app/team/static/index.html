@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>Sakura 训练队中枢</title>
+    <link rel="stylesheet" href="/team/assets/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand-lockup">
+          <div class="brand-mark">S</div>
+          <div><strong>Sakura</strong><span>训练队中枢</span></div>
+        </div>
+        <div class="squad-switcher">
+          <span class="overline">当前空间</span>
+          <button type="button" class="squad-button" title="切换训练空间">
+            <span><i class="status-dot"></i> Sakura 集训队</span><b>⌄</b>
+          </button>
+        </div>
+        <nav class="side-nav" aria-label="主导航">
+          <a class="nav-item" href="/"><span class="nav-icon">⌘</span><span>OJ 题库</span></a>
+          <a class="nav-item" href="/studio/" id="studio-link"><span class="nav-icon">✎</span><span>录题工作台</span></a>
+          <button class="nav-item active" data-view="overview"><span class="nav-icon">⌂</span><span>总览</span><kbd>1</kbd></button>
+          <button class="nav-item" data-view="members"><span class="nav-icon">◎</span><span>队员</span><kbd>2</kbd></button>
+          <button class="nav-item" data-view="ratings"><span class="nav-icon">↗</span><span>Rating 曲线</span><kbd>3</kbd></button>
+          <button class="nav-item" data-view="contests"><span class="nav-icon">▣</span><span>比赛复盘</span><kbd>4</kbd></button>
+          <button class="nav-item" data-view="submissions"><span class="nav-icon">⌁</span><span>提交分析</span><kbd>5</kbd></button>
+        </nav>
+        <div class="sidebar-divider"></div>
+        <div class="side-quick">
+          <span class="overline">数据连接</span>
+          <div class="connection-row"><i class="connection-dot good"></i><span>Codeforces</span><small>LIVE</small></div>
+          <div class="connection-row"><i class="connection-dot good"></i><span>AtCoder</span><small>LIVE</small></div>
+          <div class="connection-row"><i class="connection-dot"></i><span>NowCoder</span><small>LIVE</small></div>
+          <div class="connection-row"><i class="connection-dot good"></i><span>Sakura OJ</span><small id="oj-state">LOCAL</small></div>
+        </div>
+        <div class="sidebar-foot">
+          <button class="help-link" id="export-button" title="导出队伍数据"><span>⇩</span> 导出数据</button>
+          <span class="build-label">Sakura v0.2 · 统一工作台</span>
+        </div>
+      </aside>
+
+      <div class="content-shell">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobile-menu" type="button" aria-label="打开导航">☰</button>
+          <div class="crumb"><span id="crumb-root">总览</span><b>/</b><span id="crumb-leaf">训练队状态</span></div>
+          <div class="topbar-actions">
+            <label class="global-search"><span>⌕</span><input id="global-search" type="search" placeholder="搜索队员、题目或比赛" autocomplete="off" /></label>
+            <button class="icon-btn" id="refresh-button" type="button" title="刷新数据" aria-label="刷新数据">⟳</button>
+            <button class="sync-button" id="sync-button" type="button"><span>↻</span> 同步平台</button>
+            <div class="user-chip"><span class="avatar">教</span><span><strong>教练视角</strong><small>管理员</small></span><b>⌄</b></div>
+          </div>
+        </header>
+
+        <main class="main-content">
+          <section class="page active" data-page="overview">
+            <div class="page-heading">
+              <div><span class="eyebrow" id="today-label"></span><h1>训练队状态</h1><p>把每一次比赛和提交，变成下一次训练的依据。</p></div>
+              <div class="heading-actions"><span class="last-sync" id="last-sync">Sakura OJ 自动同步 · 平台记录</span><button class="primary-btn" id="quick-add-member" type="button"><span>＋</span> 添加队员</button></div>
+            </div>
+            <div class="metric-grid" id="metric-grid"></div>
+            <div class="dashboard-grid top-grid">
+              <article class="panel trend-panel">
+                <div class="panel-head"><div><span class="eyebrow">TEAM MOMENTUM</span><h2>队伍拟合 rating</h2></div><div class="panel-tools"><span class="legend"><i class="legend-line mint"></i>队伍均值</span><select id="trend-range" aria-label="趋势范围"><option value="all">全部周期</option><option value="90">近 90 天</option><option value="30">近 30 天</option></select></div></div>
+                <div class="chart-wrap" id="overview-chart"></div>
+                <div class="chart-footer"><span><b id="trend-start">—</b><small>周期起点</small></span><span><b id="trend-end">—</b><small>最新均值</small></span><span><b class="positive" id="trend-change">—</b><small>周期变化</small></span><span class="chart-note">拟合模型 · v1.0</span></div>
+              </article>
+              <article class="panel insight-panel">
+                <div class="panel-head"><div><span class="eyebrow">COACH NOTES</span><h2>本周观察</h2></div><button class="icon-btn small" id="refresh-insights" title="重新生成观察">⟳</button></div>
+                <div class="insight-list" id="insight-list"></div>
+                <div class="coach-callout"><span class="callout-icon">✦</span><div><strong>训练建议</strong><p>本周安排一场 90 分钟图论专项，优先复盘 WA 集中的最短路与树上 DP。</p></div></div>
+              </article>
+            </div>
+            <div class="dashboard-grid bottom-grid">
+              <article class="panel platform-panel"><div class="panel-head"><div><span class="eyebrow">PLATFORM MIX</span><h2>平台表现</h2></div><button class="text-btn" data-view-jump="ratings">查看曲线 <span>→</span></button></div><div class="platform-list" id="platform-list"></div></article>
+              <article class="panel leaderboard-panel"><div class="panel-head"><div><span class="eyebrow">SQUAD RANKING</span><h2>队内排行</h2></div><button class="text-btn" data-view-jump="members">全部队员 <span>→</span></button></div><div class="leaderboard" id="leaderboard"></div></article>
+            </div>
+            <article class="panel activity-panel"><div class="panel-head"><div><span class="eyebrow">LIVE FEED</span><h2>最近动态</h2></div><button class="text-btn" data-view-jump="submissions">查看全部 <span>→</span></button></div><div class="activity-list" id="activity-list"></div></article>
+          </section>
+
+          <section class="page" data-page="members">
+            <div class="page-heading compact"><div><span class="eyebrow">SQUAD DIRECTORY</span><h1>队员档案</h1><p>账号、rating 和训练状态集中管理。</p></div><div class="heading-actions"><button class="secondary-btn" id="oj-sync-button" type="button"><span>⇄</span> 导入 OJ 提交</button><button class="primary-btn" id="add-member-button" type="button"><span>＋</span> 添加队员</button></div></div>
+            <div class="toolbar-row"><div class="filter-tabs" id="member-status-tabs"><button class="active" data-status="">全部 <b id="member-total">0</b></button><button data-status="active">训练中</button><button data-status="paused">暂休</button><button data-status="graduated">毕业</button></div><label class="table-search"><span>⌕</span><input id="member-search" type="search" placeholder="按姓名、学号、handle 或 UID 搜索" /></label></div>
+            <article class="panel table-panel"><div class="member-table" id="member-table"></div></article>
+          </section>
+
+          <section class="page" data-page="ratings">
+            <div class="page-heading compact"><div><span class="eyebrow">RATING LAB</span><h1>Rating 曲线</h1><p>把不同平台的比赛表现映射到同一条可解释的成长曲线上。</p></div><div class="heading-actions"><button class="secondary-btn" id="import-rating-button" type="button"><span>＋</span> 手动录入</button><select class="select-control" id="rating-member-select" aria-label="选择队员"><option value="">全队均值</option></select><div class="segmented" id="rating-platform-tabs"><button class="active" data-platform="all">综合</button><button data-platform="codeforces">CF</button><button data-platform="atcoder">AC</button><button data-platform="nowcoder">NC</button></div></div></div>
+            <div class="rating-layout"><article class="panel large-chart-panel"><div class="panel-head"><div><span class="eyebrow">FITTED RATING</span><h2 id="rating-chart-title">全队成长轨迹</h2></div><span class="model-badge">拟合置信度 86%</span></div><div class="chart-wrap tall" id="rating-chart"></div><div class="chart-footer"><span><b id="rating-chart-start">—</b><small>起点</small></span><span><b id="rating-chart-current">—</b><small>当前</small></span><span><b class="positive" id="rating-chart-delta">—</b><small>变化</small></span><span class="chart-note">每场比赛 = 1 个观测点</span></div></article><aside class="panel method-panel"><span class="eyebrow">MODEL NOTE</span><h2>拟合方法</h2><p class="method-intro">让 CF、AC、NC 的名次和规模可以被放在同一个坐标系里。</p><div class="method-step"><span>01</span><div><strong>百分位</strong><small>按参赛排名换算相对位置</small></div></div><div class="method-step"><span>02</span><div><strong>规模修正</strong><small>大赛与小赛使用不同权重</small></div></div><div class="method-step"><span>03</span><div><strong>指数平滑</strong><small>降低单场发挥的偶然噪音</small></div></div><div class="method-formula">fitted = 0.66 × previous<br />+ 0.34 × performance</div><button class="secondary-btn full" id="recompute-button" type="button">重新计算全部曲线</button></aside></div>
+            <article class="panel rating-table-panel"><div class="panel-head"><div><span class="eyebrow">LATEST SNAPSHOT</span><h2>平台快照</h2></div><span class="muted">最近同步状态见数据连接</span></div><div id="rating-snapshot"></div></article>
+          </section>
+
+          <section class="page" data-page="contests">
+            <div class="page-heading compact"><div><span class="eyebrow">CONTEST REVIEW</span><h1>比赛复盘</h1><p>每一场比赛都是一次可量化的训练反馈。</p></div><div class="heading-actions"><select class="select-control" id="contest-platform-select" aria-label="比赛平台筛选"><option value="">全部平台</option><option value="codeforces">Codeforces</option><option value="atcoder">AtCoder</option><option value="nowcoder">NowCoder</option><option value="manual">训练赛</option></select><button class="primary-btn" id="import-contest-button" type="button"><span>＋</span> 导入比赛</button></div></div>
+            <div class="contest-summary" id="contest-summary"></div>
+            <article class="panel table-panel"><div class="contest-table" id="contest-table"></div></article>
+          </section>
+
+          <section class="page" data-page="submissions">
+            <div class="page-heading compact"><div><span class="eyebrow">SUBMISSION INTELLIGENCE</span><h1>提交分析</h1><p>从 AC 率、错误类型和语言分布找到训练盲区。</p></div><div class="heading-actions"><a class="secondary-btn" id="open-oj-button" href="http://127.0.0.1:8000" target="_blank" rel="noreferrer"><span>↗</span> 打开 Sakura OJ</a><button class="secondary-btn" id="submission-export-button" type="button"><span>⇩</span> 导出 CSV</button></div></div>
+            <div class="submission-kpis" id="submission-kpis"></div>
+            <div class="submission-analysis-grid"><article class="panel analysis-panel"><div class="panel-head"><div><span class="eyebrow">VERDICT MIX</span><h2>结果分布</h2></div></div><div class="breakdown-list" id="verdict-breakdown"></div></article><article class="panel analysis-panel"><div class="panel-head"><div><span class="eyebrow">LANGUAGE MIX</span><h2>语言偏好</h2></div></div><div class="breakdown-list" id="language-breakdown"></div></article></div>
+            <div class="toolbar-row submission-toolbar"><div class="filter-tabs" id="submission-verdict-tabs"><button class="active" data-verdict="">全部</button><button data-verdict="ACCEPTED">AC</button><button data-verdict="WRONG_ANSWER">WA</button><button data-verdict="TIME_LIMIT_EXCEEDED">TLE</button><button data-verdict="COMPILE_ERROR">CE</button></div><select class="select-control" id="submission-member-select" aria-label="按队员筛选"><option value="">全队提交</option></select></div>
+            <article class="panel table-panel"><div class="submission-table" id="submission-table"></div></article>
+          </section>
+        </main>
+        <footer class="content-footer"><span>Sakura Training Intelligence</span><span>本地数据 · <a href="/docs" target="_blank" rel="noreferrer">API 文档</a></span></footer>
+      </div>
+    </div>
+
+    <div class="toast is-hidden" id="toast" role="status"></div>
+
+    <dialog class="modal" id="member-dialog" aria-labelledby="member-dialog-title"><form id="member-form" method="dialog"><div class="modal-head"><div><span class="eyebrow">SQUAD DIRECTORY</span><h2 id="member-dialog-title">添加队员</h2></div><button class="icon-btn" type="button" data-close-dialog="member-dialog" title="关闭">×</button></div><div class="form-grid"><label class="wide">姓名<input name="name" required placeholder="例如：林墨" /></label><label>学号<input name="student_id" placeholder="S24001" /></label><label>训练组<select name="team_group"><option>算法组</option><option>图论组</option><option>新秀组</option><option>教练组</option></select></label><label>状态<select name="status"><option value="active">训练中</option><option value="paused">暂休</option><option value="graduated">毕业</option></select></label><label>头像色<input name="color" type="color" value="#2dd4bf" /></label><label>Codeforces handle<input name="cf_handle" placeholder="tourist" /></label><label>AtCoder handle<input name="atcoder_handle" placeholder="handle" /></label><label>牛客 UID<input name="nowcoder_uid" inputmode="numeric" pattern="[1-9][0-9]{0,18}" maxlength="19" title="填写个人主页 URL 中的数字 ID" placeholder="个人主页 URL 中的数字 ID" /></label><label>牛客昵称（选填）<input name="nowcoder_handle" placeholder="同步时自动更新" /></label><label>Sakura OJ 用户名<input name="oj_username" placeholder="可选映射" /></label><label class="wide">备注<textarea name="note" rows="3" placeholder="训练目标、擅长方向或提醒"></textarea></label></div><p class="form-hint">牛客按 UID 同步：填写个人主页 /profile/ 后的数字，昵称不用于查询。换绑或清空 UID 会清除该成员原有的牛客分数与比赛记录。</p><p class="form-feedback" id="member-form-feedback"></p><div class="modal-actions"><button class="secondary-btn" type="button" data-close-dialog="member-dialog">取消</button><button class="primary-btn" type="submit">保存队员</button></div></form></dialog>
+
+    <dialog class="modal wide-modal" id="contest-dialog" aria-labelledby="contest-dialog-title"><form id="contest-form" method="dialog"><div class="modal-head"><div><span class="eyebrow">CONTEST IMPORT</span><h2 id="contest-dialog-title">导入比赛结果</h2></div><button class="icon-btn" type="button" data-close-dialog="contest-dialog" title="关闭">×</button></div><div class="form-grid"><label>平台<select name="platform"><option value="codeforces">Codeforces</option><option value="atcoder">AtCoder</option><option value="nowcoder">NowCoder</option><option value="manual">训练赛</option></select></label><label>比赛 ID<input name="external_id" required placeholder="CF-Round-xxx" /></label><label class="wide">比赛名称<input name="name" required placeholder="Codeforces Round #xxx" /></label><label>比赛时间<input name="contest_time" type="datetime-local" required /></label><label>参赛人数<input name="participant_count" type="number" min="1" value="1000" /></label><label class="wide">结果 JSON <textarea name="results_json" rows="7" required placeholder='[{"member_id":1,"rank":42,"participants":1000,"solved":4,"new_rating":1800}]'></textarea></label></div><p class="form-hint">每个结果至少需要 member_id、rank；participants / solved / new_rating 用于提高拟合精度。</p><p class="form-feedback" id="contest-form-feedback"></p><div class="modal-actions"><button class="secondary-btn" type="button" data-close-dialog="contest-dialog">取消</button><button class="primary-btn" type="submit">导入并计算</button></div></form></dialog>
+
+    <dialog class="modal" id="rating-dialog" aria-labelledby="rating-dialog-title"><form id="rating-form" method="dialog"><div class="modal-head"><div><span class="eyebrow">RATING SNAPSHOT</span><h2 id="rating-dialog-title">手动录入平台分数</h2></div><button class="icon-btn" type="button" data-close-dialog="rating-dialog" title="关闭">×</button></div><div class="form-grid"><label>队员<select name="member_id" id="rating-form-member" required></select></label><label>平台<select name="platform"><option value="nowcoder">NowCoder</option><option value="codeforces">Codeforces</option><option value="atcoder">AtCoder</option></select></label><label>当前 rating<input name="rating" type="number" min="0" max="5000" required placeholder="1500" /></label><label>峰值 rating<input name="peak_rating" type="number" min="0" max="5000" placeholder="1500" /></label><label>段位 / 标签<input name="rank_title" placeholder="进阶" /></label><label>比赛场次<input name="contest_count" type="number" min="0" value="0" /></label><label>近期变化<input name="rating_change" type="number" value="0" /></label></div><p class="form-hint">适用于没有稳定公开接口的平台；保存后会立即出现在快照和队员画像中。</p><p class="form-feedback" id="rating-form-feedback"></p><div class="modal-actions"><button class="secondary-btn" type="button" data-close-dialog="rating-dialog">取消</button><button class="primary-btn" type="submit">保存分数</button></div></form></dialog>
+
+    <dialog class="modal" id="oj-dialog" aria-labelledby="oj-dialog-title"><form id="oj-form" method="dialog"><div class="modal-head"><div><span class="eyebrow">SAKURA OJ BRIDGE</span><h2 id="oj-dialog-title">导入 OJ 提交</h2></div><button class="icon-btn" type="button" data-close-dialog="oj-dialog" title="关闭">×</button></div><div class="form-grid"><label class="wide">归属成员<select name="member_id" id="oj-form-member"><option value="">按 OJ 用户名自动归属</option></select></label></div><p class="form-hint">默认同步当前 Sakura OJ 的提交。填写队员档案中的 OJ 用户名后自动归属；旧的无账号提交可手动指定成员。</p><p class="form-feedback" id="oj-form-feedback"></p><div class="modal-actions"><button class="secondary-btn" type="button" data-close-dialog="oj-dialog">取消</button><button class="primary-btn" type="submit">开始导入</button></div></form></dialog>
+
+    <dialog class="modal profile-modal" id="profile-dialog" aria-labelledby="profile-title"><div id="profile-content"></div><button class="profile-close icon-btn" type="button" data-close-dialog="profile-dialog" title="关闭">×</button></dialog>
+
+    <script type="module" src="/team/assets/app.js"></script>
+  </body>
+</html>

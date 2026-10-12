@@ -1,0 +1,3 @@
+node
+--stack-size=262144
+main.js

@@ -1,0 +1,38 @@
+FROM python:3.11-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    OJ_DATABASE_PATH=/sandbox/oj.sqlite3 \
+    OJ_RUNTIME_DIR=/sandbox \
+    OJ_C_COMPILER=gcc \
+    OJ_CPP_COMPILER=g++ \
+    OJ_PYPY=pypy3 \
+    OJ_JAVAC=javac \
+    OJ_JAVA=java
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        ca-certificates \
+        default-jdk-headless \
+        passwd \
+        pypy3 \
+        tini \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY app ./app
+
+RUN useradd --create-home --uid 10001 --shell /usr/sbin/nologin oj \
+    && mkdir -p /sandbox \
+    && chown -R oj:oj /app /sandbox
+
+ENV HOME=/home/oj
+
+USER oj
+
+ENTRYPOINT ["tini", "--"]
+CMD ["python", "-m", "app.services.docker_worker"]

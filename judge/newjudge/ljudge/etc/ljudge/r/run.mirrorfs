@@ -1,0 +1,16 @@
+mkdir /dev
+mkdir /tmp
+#mkdirw /ljudgetemp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /usr/local/lib/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+# 
+#mirror /etc/R/
+#mirror /usr/bin/R*
+mirror /bin/uname
+mirror /bin/sed
+mirror /bin/bash
+mirror /opt/toolchains/R-4.0.3/

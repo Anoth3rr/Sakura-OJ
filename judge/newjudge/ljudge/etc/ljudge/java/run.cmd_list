@@ -1,0 +1,7 @@
+java
+-Xmx$jvmmemory
+-Xss256m
+-Dfile.encoding=UTF-8
+-cp
+.:/opt/newjudge/include/*:/opt/newjudge/include
+Main

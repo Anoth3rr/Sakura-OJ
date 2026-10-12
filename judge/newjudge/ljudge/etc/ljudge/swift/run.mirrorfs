@@ -1,0 +1,14 @@
+mkdir /dev
+mkdir /tmp
+# must random
+mirror /dev/random
+mirror /lib/
+mirror /lib64/
+mirror /usr/include/
+mirror /usr/lib*/
+mirror /usr/local/lib/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+mirror /opt/toolchains/swift-5.3/usr/
+mirror /opt/toolchains/swift-5.3/cache/
+touch /hexin-userprint.log

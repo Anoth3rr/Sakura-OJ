@@ -1,0 +1,20 @@
+mkdir /dev/
+mkdir /proc/
+mkdir /tmp/
+mirror /bin/
+mirror /usr/
+mirror /lib/
+mirror /lib64/
+# ghc on Debian requires /var/lib/ghc
+mirror /var/lib/
+mirror /etc/ld.so.cache
+# debian
+mirror /etc/alternatives/
+# java
+mirror /etc/java*/
+# for topcoder
+mirror /opt/newjudge/include/*.class
+mirror /opt/newjudge/include/*.jar
+#  rename Solution.java AND javac 
+mirror /opt/judge-client/get_class_name
+mirror /opt/newjudge/script/java-compile.sh

@@ -1,0 +1,14 @@
+mkdir /dev
+mkdir /tmp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+mirror /usr/local/bin/d8
+mirror /usr/local/bin/natives_blob.bin
+mirror /usr/local/bin/snapshot_blob.bin
+#for topcoder
+mirror /opt/judge-client/nc_v8_tools.js
+mirror /opt/newjudge/include/nc_v8_tools.js
+touch /hexin-userprint.log

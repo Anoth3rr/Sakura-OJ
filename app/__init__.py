@@ -1,0 +1,2 @@
+"""Sakura OJ application package."""
+

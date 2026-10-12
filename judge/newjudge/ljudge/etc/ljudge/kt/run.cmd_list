@@ -1,0 +1,7 @@
+java
+-Xmx$jvmmemory
+-Xss256m
+-cp
+.:/opt/newjudge/include:/opt/toolchains/kotlinc/lib/*
+MainKt
+

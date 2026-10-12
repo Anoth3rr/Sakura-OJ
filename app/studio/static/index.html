@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172e3c">
+  <title>Sakura Studio · 录题工作台</title>
+  <link rel="icon" type="image/svg+xml" href="/studio/assets/favicon.svg">
+  <link rel="stylesheet" href="/studio/assets/vendor/katex.min.css">
+  <link rel="stylesheet" href="/studio/assets/style.css?v=studio-papers-solutions-20261012">
+  <script defer src="/studio/assets/vendor/marked.umd.js"></script>
+  <script defer src="/studio/assets/vendor/purify.min.js"></script>
+  <script defer src="/studio/assets/vendor/katex.min.js"></script>
+  <script defer src="/studio/assets/vendor/auto-render.min.js"></script>
+  <script defer src="/studio/assets/materials.js?v=studio-papers-solutions-20261012"></script>
+  <script defer src="/studio/assets/app.js?v=studio-papers-solutions-20261012"></script>
+</head>
+<body class="polygon-studio">
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="Sakura Studio 首页"><span class="logo">S<span>.</span></span><span>Sakura<small>PROBLEM STUDIO</small></span></a>
+  <div class="workspace"><span class="workspace-icon">⌘</span><div>本地工作空间<small>LOCAL WORKSPACE</small></div><span class="tiny-dot"></span></div>
+  <button class="button primary new-problem" data-action="new"><span>＋</span> 新建题目 <kbd>N</kbd></button>
+  <nav class="workspace-switch" aria-label="工作空间导航"><button data-action="problem-library" title="题目库"><span>▤</span><b>题目库</b></button><button data-action="papers" title="试卷管理"><span>▦</span><b>试卷管理</b><i id="paper-count">0</i></button></nav>
+  <div class="library-label">题目库 <span id="problem-count">0</span></div>
+  <label class="search"><span>⌕</span><input id="search" aria-label="搜索题目" placeholder="搜索题目或 ID…"><kbd>/</kbd></label>
+  <nav id="problem-list" aria-label="题目列表"></nav>
+  <div class="sidebar-bottom">
+    <a class="text-button" href="/#manage-problems">← 返回题目管理列表</a>
+    <a class="text-button" href="/team/" id="team-link">◎ 集训队管理</a>
+    <button class="text-button" data-action="templates"><span>◇</span> 从 testlib 示例开始 <span>↗</span></button>
+    <div class="engine-status" id="engine-status"><span class="status-light"></span><div>连接评测机…<small>newjudge / lrun</small></div></div>
+    <div class="sidebar-caption">Sakura · Problem preparation</div>
+  </div>
+</aside>
+<main>
+  <header class="topbar"><div class="breadcrumb">工作空间 <span>/</span> <b id="breadcrumb-title">录题工作台</b></div><div class="topbar-right"><span class="local-badge">LOCAL</span><button class="text-button" data-action="open-trash">回收站</button><button class="icon-button" data-action="templates" aria-label="创建示例题" title="从示例开始">◇</button><button class="icon-button" data-action="help" aria-label="使用说明">?</button></div></header>
+  <div id="welcome" class="welcome">
+    <div class="section-intro"><div><div class="eyebrow">PROBLEM PREPARATION</div><h1>录题工作台</h1><p>选择题目，管理题面、评测程序、测试数据和运行记录。</p></div><button class="button primary" data-action="new">＋ 新建题目</button></div>
+    <div class="table-card" id="workspace-problems"></div>
+    <details class="starter-examples"><summary>从 testlib 示例开始</summary><div class="example-grid" id="welcome-examples"></div></details>
+  </div>
+  <section id="papers-workspace" class="papers-workspace" hidden>
+    <div id="papers-home">
+      <div class="section-intro"><div><div class="eyebrow">PAPERS</div><h1>试卷管理</h1><p>从题目库选择题目，组成一套试卷。</p></div><button class="button primary" data-action="new-paper">＋ 新建试卷</button></div>
+      <div class="table-card" id="papers-list"></div>
+    </div>
+    <div id="paper-editor" hidden>
+      <div class="section-intro"><div><button class="text-button teal" data-action="papers">← 全部试卷</button><h1 id="paper-heading">未命名试卷</h1><p id="paper-status"></p></div><div class="heading-actions"><button class="button secondary" data-action="preview-paper">预览整卷</button><button class="button secondary" data-action="export-paper">↓ 导出试卷</button><button class="button secondary danger-text" data-action="delete-paper">删除</button><button class="button primary" data-action="save-paper">保存试卷</button></div></div>
+      <div class="config-box paper-fields"><label>试卷名称<input id="paper-title" maxlength="120" placeholder="例如：基础算法训练 · 第一周"></label><label>试卷说明<textarea id="paper-description" rows="3" placeholder="可填写训练目标或答题说明，支持 Markdown。"></textarea></label></div>
+      <div class="config-box"><div class="box-heading"><h3>添加题目</h3><span>输入题目 ID，或从题目库选择</span></div><div class="paper-add-row"><input id="paper-problem-code" aria-label="题目 ID" placeholder="例如 0001" inputmode="numeric"><button class="button secondary" data-action="add-paper-code">按 ID 添加</button><select id="paper-problem-select" aria-label="选择组卷题目"></select><button class="button secondary" data-action="add-paper-selection">添加所选</button></div></div>
+      <div class="table-card" id="paper-problems"></div>
+      <p class="small-note">试卷引用题目库中的题目，预览和导出使用当前保存版本。移除题目只会将它移出本卷。</p>
+    </div>
+  </section>
+  <div id="editor" hidden>
+    <section class="problem-heading">
+      <div><div class="eyebrow">PROBLEM WORKSPACE</div><div class="title-row"><h1 id="problem-title">未命名题目</h1><span id="mode-badge" class="mode-badge"></span></div><div class="problem-meta"><span id="save-status">已保存</span><span>·</span><span id="revision"></span><span>·</span><span id="data-status"></span></div></div>
+      <div class="heading-actions"><button class="button secondary" data-action="publish">发布到 OJ</button><button class="button secondary danger-text" data-action="trash" aria-label="删除题目">删除</button><button class="button secondary" data-action="export"><span>↓</span> 导出题包</button><button class="button primary" data-action="save">保存题目 <kbd>Ctrl S</kbd></button></div>
+    </section>
+    <nav class="tabs" aria-label="题目工作区" role="tablist">
+      <button id="tab-general" role="tab" aria-controls="panel-general" aria-selected="true" data-tab="general" class="active">General Info<small>基本信息</small></button>
+      <button id="tab-statement" role="tab" aria-controls="panel-statement" aria-selected="false" data-tab="statement">Statement<small>题面</small></button>
+      <button id="tab-checker" role="tab" aria-controls="panel-checker" aria-selected="false" data-tab="checker">Checker<small>答案检查</small></button>
+      <button id="tab-validator" role="tab" aria-controls="panel-validator" aria-selected="false" data-tab="validator">Validator<small>输入校验</small></button>
+      <button id="tab-tests" role="tab" aria-controls="panel-tests" aria-selected="false" data-tab="tests">Tests <i id="data-count">0</i><small>测试数据</small></button>
+      <button id="tab-solution" role="tab" aria-controls="panel-solution" aria-selected="false" data-tab="solution">Solution<small>解题程序</small></button>
+      <button id="tab-invocations" role="tab" aria-controls="panel-invocations" aria-selected="false" data-tab="invocations">Invocations<small>运行与结果</small></button>
+    </nav>
+    <div class="panels">
+      <section id="panel-statement" class="panel" role="tabpanel" aria-labelledby="tab-statement" hidden>
+        <div class="section-intro"><div><h2>Statement <span>题面</span></h2><p>使用 Markdown 编写题面，支持公式、表格、代码与实时预览。</p></div><button class="text-button teal" data-action="statement-template">插入题面模板</button></div>
+        <div class="markdown-workspace">
+          <div class="source-pane"><div class="pane-toolbar"><span><b>↓</b> Markdown</span><div class="format-tools"><button data-insert="bold" title="粗体">B</button><button data-insert="heading" title="二级标题">H₂</button><button data-insert="math" title="数学公式">∑</button><button data-insert="code" title="代码块">&lt;/&gt;</button></div></div><textarea id="statement" data-key="statement" spellcheck="false" aria-label="Markdown 题面" placeholder="# 题目描述&#10;&#10;在这里，写下你的题目…&#10;&#10;## 输入格式&#10;&#10;## 输出格式&#10;&#10;## 样例&#10;&#10;## 数据范围"></textarea><div class="pane-footer"><span id="word-count">0 字</span><span>Markdown · UTF-8</span></div></div>
+          <div class="preview-pane"><div class="pane-toolbar"><span><span class="tiny-dot"></span> 实时预览</span><span class="subtle">读者视角</span></div><article id="preview" class="markdown"></article><div class="pane-footer"><span>支持 $行内公式$ 与 $$独立公式$$</span><span>LaTeX</span></div></div>
+        </div>
+        <div class="bottom-hint">保存题目后，可继续配置评测程序。<button class="text-button teal" data-go="checker">配置 Checker →</button></div>
+      </section>
+      <section id="panel-general" class="panel" role="tabpanel" aria-labelledby="tab-general">
+        <div class="section-intro"><div><h2>General Info <span>基本信息</span></h2><p>设置题目名称、判题方式和资源限制。</p></div><span class="quiet-badge">newjudge / lrun</span></div>
+        <div class="general-layout"><div class="general-form">
+        <div class="config-box basic-fields"><label for="title">题目名称</label><input id="title" data-key="title" aria-label="题目标题" maxlength="120" placeholder="给这道题一个名字"><div class="metadata-row"><span>创建时间 <b id="created-at"></b></span><span>最近保存 <b id="updated-at"></b></span></div></div>
+        <h3 class="field-heading">判题方式</h3>
+        <div class="mode-grid" id="mode-options"></div>
+        <div class="config-box" id="communication-config" hidden><div class="box-heading"><h3>通信协议</h3><button class="text-button teal" id="communication-example" data-example="communication">创建当前协议示例 ↗</button></div><label>执行方式 <select id="communication_protocol" data-key="communication_protocol" aria-label="通信协议"><option value="send-receive-stdin-v1">run-twice · Sender / Receiver</option><option value="testlib-communication-v1">testlib 两轮 · interactor → 第二轮 → checker</option><option value="domjudge-multipass-v1">多阶段 · 输出验证器构造下一轮输入</option></select></label></div>
+        <div class="config-box"><div class="box-heading"><h3>资源限制</h3><span>通信题的时间与内存限制分别作用于每个阶段</span></div><div class="limit-grid">
+          <label>时间限制<div class="unit-input"><input type="number" data-key="time_ms" id="time_ms" min="100" max="30000" step="100"><span>ms</span></div></label>
+          <label>内存限制<div class="unit-input"><input type="number" data-key="memory_mb" id="memory_mb" min="16" max="2048"><span>MiB</span></div></label>
+          <label>输出上限<div class="unit-input"><input type="number" data-key="output_kb" id="output_kb" min="1" max="8192"><span>KiB</span></div></label>
+          <label id="message-limit">通信量上限<div class="unit-input"><input type="number" data-key="message_bytes" id="message_bytes" min="1" max="1048576"><span>bytes</span></div></label>
+          <label id="pass-limit" hidden>最大执行轮数<div class="unit-input"><input type="number" data-key="validation_passes" id="validation_passes" min="1" max="32"><span>轮</span></div></label>
+        </div></div>
+        <div class="bottom-hint">修改后点击上方「保存题目」，或使用 Ctrl+S。<button class="text-button teal" data-go="statement">编辑 Statement →</button></div>
+        </div><aside class="preparation-card"><h3>题目准备状态</h3><div id="preparation-status"></div><div class="preparation-footer" id="publication-status"></div></aside></div>
+      </section>
+      <section id="panel-checker" class="panel" role="tabpanel" aria-labelledby="tab-checker" hidden>
+        <div class="section-intro"><div><h2>Checker <span>答案检查</span></h2><p id="checker-description">检查选手输出是否正确。在下方上传文件或直接编辑源码。</p></div><span class="quiet-badge">C++17 · testlib.h</span></div>
+        <div class="program-grid component-grid" id="checker-programs"></div>
+        <div id="interactor-section" hidden><div class="section-intro compact"><div><h3>Interactor · 交互器</h3><p>与选手程序双向通信，检查询问、答案及协议规则。</p></div></div><div class="program-grid component-grid" id="interactor-programs"></div></div>
+        <div class="protocol-note" id="protocol-note"></div>
+        <div class="bottom-hint">生成日志记录工具校验结果；在 Invocations 中验证完整判题流程。<button class="text-button teal" data-go="validator">配置 Validator →</button></div>
+      </section>
+      <section id="panel-validator" class="panel" role="tabpanel" aria-labelledby="tab-validator" hidden>
+        <div class="section-intro"><div><h2>Validator <span>输入校验</span></h2><p>校验测试输入的格式、范围与题目约束。</p></div><span class="quiet-badge">C++17 · testlib.h</span></div>
+        <div class="program-grid component-grid" id="validator-programs"></div>
+        <div class="protocol-note"><strong>输入校验协议</strong><br>使用 <code>registerValidation(argc, argv)</code>，通过 <code>inf</code> 从标准输入读取数据。显式校验空格、换行和文件结束，以及题目要求的数值范围、总和等条件。<br>在 Tests 中「生成并验证」时，每个测试点都会交给此 validator；失败日志显示在对应生成任务中。</div>
+        <div class="bottom-hint">生成器和每个测试点的生成参数在 Tests 中管理。<button class="text-button teal" data-go="tests">管理 Tests →</button></div>
+      </section>
+      <section id="panel-tests" class="panel" role="tabpanel" aria-labelledby="tab-tests" hidden>
+        <div class="section-intro"><div><h2>Tests <span>测试数据</span></h2><p>管理生成器、生成脚本与测试点，查看输入和答案。</p></div><button class="button primary" data-action="generate" id="generate-button">▷ 生成并验证</button></div>
+        <div class="program-grid component-grid" id="generator-programs"></div>
+        <div class="pipeline"><span><b>1</b> 编译工具</span><i>→</i><span><b>2</b> gen 生成</span><i>→</i><span><b>3</b> val 校验</span><i>→</i><span id="answer-step"><b>4</b> 标准答案</span><i>→</i><span><b>5</b> 数据就绪</span></div>
+        <div class="generation-grid"><div class="config-box arguments"><div class="box-heading"><h3>生成参数</h3><span>每行一个测试点</span></div><textarea id="generation" data-key="generation" spellcheck="false" aria-label="生成器参数" placeholder="gen 10 100 1&#10;gen 100 1000 2"></textarea><div class="small-note">参数直接传入 gen，不执行 shell。可使用引号；以 # 开头的行为注释。</div></div><div class="generation-info"><span class="eyebrow">DATASET</span><strong id="dataset-number">—</strong><span id="dataset-count-label">个已验证测试点</span><div id="dataset-info">上传程序，准备第一份测试数据。</div><span class="quiet-badge">单次最多 100 个测试点</span></div></div>
+        <div id="generation-job"></div>
+        <div class="table-card"><div class="box-heading"><h3>测试点</h3><span id="case-table-caption">输入 .in / 答案 .ans</span></div><div id="case-table"></div></div>
+        <div class="table-card"><div class="box-heading"><h3>生成记录</h3><span>当前题目的生成任务</span></div><div id="generation-history"></div></div>
+        <div class="bottom-hint"><span id="data-change-hint">修改判题方式、程序、参数或资源限制后，需要重新生成数据。</span><button class="text-button teal" data-go="solution">准备 Solution →</button></div>
+      </section>
+      <section id="panel-solution" class="panel" role="tabpanel" aria-labelledby="tab-solution" hidden>
+        <div class="section-intro"><div><h2>Solution <span>解题程序</span></h2><p>保存多份解法并标记预期结果，Main Correct 作为本题标程。</p></div><div class="heading-actions"><button class="button secondary" data-action="new-saved-solution">新建解法</button><button class="button primary" data-action="upload-solutions">↑ 上传多个文件</button></div></div>
+        <div id="main-solution-hint" class="protocol-note"></div>
+        <div class="table-card" id="saved-solutions"></div>
+        <div id="legacy-reference-section"><div class="section-intro compact"><div><h3 id="reference-heading">兼容旧版参考标程</h3><p id="reference-description"></p></div><button class="button secondary" data-action="migrate-reference" id="migrate-reference">加入解法列表 · Main Correct</button></div><div class="program-grid component-grid" id="reference-programs"></div></div>
+        <details class="temporary-solution"><summary>临时代码试运行</summary><p class="small-note">代码暂存于当前浏览器，也可保存到解法列表。</p>
+        <div class="run-layout"><div class="code-card"><div class="pane-toolbar"><span>参赛程序</span><div class="code-actions"><select id="solution-language" aria-label="提交语言"><option value="cpp">C++17</option><option value="python">Python 3</option></select><button class="text-button" data-action="upload-solution">↑ 上传</button><button class="text-button" data-action="copy-reference">复制标程</button></div></div><textarea id="solution" spellcheck="false" aria-label="参赛程序源码" placeholder="// 粘贴参赛程序，或上传 .c / .cpp / .py / .java 文件"></textarea><div class="pane-footer"><span id="solution-name">main.cpp</span><span id="solution-protocol">标准输入 → 标准输出</span></div></div><aside class="run-summary"><div class="eyebrow">JUDGE ENVIRONMENT</div><h3>newjudge <span>/ lrun</span></h3><div class="env-row"><span>判题方式</span><b id="env-mode"></b></div><div class="env-row"><span>时间限制</span><b id="env-time"></b></div><div class="env-row"><span>内存限制</span><b id="env-memory"></b></div><div class="env-row"><span>测试点</span><b id="env-cases"></b></div><div class="sandbox-note"><span class="tiny-dot"></span> 独立进程与文件系统<br>禁用网络 · cgroup 资源限制</div><label id="separate-receiver-label"><input type="checkbox" id="separate-receiver"> 使用独立 Receiver 代码</label></aside></div>
+        <div class="code-card receiver-card" id="receiver-card" hidden><div class="pane-toolbar"><span>Receiver 程序</span><select id="receiver-language" aria-label="Receiver 语言"><option value="cpp">C++17</option><option value="python">Python 3</option></select></div><textarea id="receiver" spellcheck="false" aria-label="Receiver 源码" placeholder="Receiver 的标准输入只有 Sender 发出的消息。"></textarea></div>
+        <div class="temporary-actions"><button class="button secondary" data-action="save-temporary-solution">保存到解法列表</button><button class="button secondary" id="submit-button" data-action="submit">▷ 运行临时代码</button></div></details>
+        <div class="bottom-hint"><span id="solution-purpose"></span><button class="text-button teal" data-go="invocations">创建 Invocation →</button></div>
+      </section>
+      <section id="panel-invocations" class="panel" role="tabpanel" aria-labelledby="tab-invocations" hidden>
+        <div class="section-intro"><div><h2>Invocations <span>运行与结果</span></h2><p id="run-description">选择解法，在当前测试数据上批量运行。</p></div><div class="heading-actions"><button class="button secondary" data-action="invoke-all">运行全部</button><button class="button primary" id="invoke-button" data-action="invoke">▷ 运行所选</button></div></div>
+        <div class="table-card"><div class="box-heading"><h3>选择解法 <small id="selected-solutions-count"></small></h3><div><button class="text-button teal" data-action="select-all-solutions">全选</button><button class="text-button" data-action="select-no-solutions">清空选择</button></div></div><div id="invocation-solutions"></div></div>
+        <div class="invocation-setup"><div><span class="eyebrow">SOLUTION</span><strong id="invocation-source">尚未填写待测程序</strong><button class="text-button teal" data-go="solution">编辑源码 →</button></div><div><span class="eyebrow">TESTS</span><strong id="invocation-tests">尚无测试数据</strong><button class="text-button teal" data-go="tests">查看测试点 →</button></div><div><span class="eyebrow">LIMITS</span><strong id="invocation-limits"></strong><span class="subtle" id="invocation-mode"></span></div></div>
+        <div id="invocation-hint" class="protocol-note"></div>
+        <div id="submission-job"></div>
+        <div class="table-card"><div class="box-heading"><h3>Invocations</h3><span id="invocation-count">当前题目的评测记录</span></div><div id="job-history"></div></div>
+      </section>
+    </div>
+  </div>
+  <footer class="main-footer"><span>SAKURA STUDIO</span><span>Problem preparation · testlib · newjudge</span><span>保存草稿 · 验证 · 发布</span></footer>
+</main>
+<input type="file" id="file-picker" hidden accept=".c,.cpp,.cc,.cxx,.py,.java">
+<input type="file" id="solutions-picker" hidden multiple accept=".c,.cpp,.cc,.cxx,.py,.java">
+<dialog id="modal"><div class="modal-header"><h2 id="modal-title"></h2><button class="icon-button" data-action="close-modal" aria-label="关闭">×</button></div><div id="modal-body"></div><p id="modal-error" role="alert" hidden></p><div id="modal-actions"></div></dialog>
+<div id="toast" role="status" hidden></div>
+</body>
+</html>

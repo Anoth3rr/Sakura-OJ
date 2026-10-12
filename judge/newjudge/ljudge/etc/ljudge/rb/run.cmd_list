@@ -1,0 +1,4 @@
+ruby
+-I/opt/newjudge/include/
+-I.
+$src

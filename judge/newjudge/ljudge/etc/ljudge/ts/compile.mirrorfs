@@ -1,0 +1,15 @@
+mkdir /dev
+mkdir /tmp
+mirror /bin/
+mirror /usr/bin/
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /usr/local/lib/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+#for topcoder 
+mirror /node_modules/
+mirror /usr/local/bin/
+mirror /opt/newjudge/script/ts-compile.sh
+mirror /opt/newjudge/include/nc_structure.ts

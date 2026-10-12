@@ -1,0 +1,18 @@
+mkdir /dev
+mkdir /tmp
+# java needs /proc/self/exe to know its path
+mkdir /proc
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+mirror /etc/java*/
+mirror /usr/bin/
+mirror /bin/
+mirror /usr/share/scala-2.11/
+mirror /usr/share/java/
+# for topcoder  
+mirror /opt/newjudge/include/*.class
+mirror /opt/newjudge/include/*.jar
+touch /hexin-userprint.log

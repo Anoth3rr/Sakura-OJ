@@ -1,0 +1,13 @@
+mkdir /dev
+mkdir /tmp
+mkdir /proc/
+mirror /lib/
+mirror /lib64/
+mirror /etc/
+mirror /usr/
+##
+mirror /opt/toolchains/fontconfig/
+mirror /dev/urandom
+mirror /dev/rrandom
+mirror /opt/toolchains/phantomjs-2.5.0-beta-ubuntu-xenial/
+touch /hexin-userprint.log

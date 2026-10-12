@@ -1,0 +1,8 @@
+{
+  "name": "newjudge-studio-assets",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned local Markdown, sanitization and math assets for Newjudge Studio",
+  "scripts": {"vendor": "node vendor.mjs"},
+  "dependencies": {"dompurify": "3.4.16", "katex": "0.18.1", "marked": "18.0.11"}
+}

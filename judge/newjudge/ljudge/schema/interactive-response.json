@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "definitions": {
+    "compilationResult": {
+      "type": "object",
+      "description": "The compilation result of the source code",
+      "properties": {
+        "log": {
+          "type": "string",
+          "description": "Compiler log, including warnings and errors. Show this to end-users"
+        },
+        "success": {
+          "type": "boolean",
+          "description": "Whether compilation has succeeded"
+        },
+        "error": {
+          "type": "string",
+          "description": "Internal error message. Should not be visible to end-users. Present only when an internal error (ex. required compiler is not installed) happens"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "log",
+        "success"
+      ]
+    },
+    "testcaseResult": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "PRESENTATION_ERROR",
+            "WRONG_ANSWER",
+            "NON_ZERO_EXIT_CODE",
+            "MEMORY_LIMIT_EXCEEDED",
+            "TIME_LIMIT_EXCEEDED",
+            "OUTPUT_LIMIT_EXCEEDED",
+            "FLOAT_POINT_EXCEPTION",
+            "SEGMENTATION_FAULT",
+            "RUNTIME_ERROR",
+            "INTERNAL_ERROR"
+          ],
+          "description": "Judge response for the test case"
+        },
+        "exceed": {
+          "type": "string",
+          "enum": [
+            "CPU_TIME",
+            "REAL_TIME",
+            "MEMORY",
+            "OUTPUT"
+          ],
+          "description": "The limit that the program exceeded. Present only when the program has exceeded one limit"
+        },
+        "time": {
+          "type": "number",
+          "description": "Contestant CPU time in seconds, including failed runs when available."
+        },
+        "memory": {
+          "type": "number",
+          "description": "Contestant peak memory in bytes, including failed runs when available."
+        },
+        "error": {
+          "type": "string",
+          "description": "Judge diagnostic; may include details of contestant or interactor failures."
+        },
+        "stderr": {
+          "type": "string",
+          "description": "stderr output of the program. Present only when the command line option \"--keep-stderr\" is set"
+        },
+        "judgeStderr": {
+          "type": "string",
+          "description": "Interactor stderr, captured separately when --keep-stderr is set."
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "result"
+      ]
+    }
+  },
+  "properties": {
+    "testcases": {
+      "type": "array",
+      "description": "Test case results. Present only when compilation has successed",
+      "items": {
+        "$ref": "#/definitions/testcaseResult"
+      }
+    },
+    "userCompilation": {
+      "$ref": "#/definitions/compilationResult",
+      "description": "Compilation result of the user code"
+    },
+    "judgeCompilation": {
+      "$ref": "#/definitions/compilationResult",
+      "description": "Interactor compilation result. Present after contestant compilation succeeds."
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "userCompilation"
+  ]
+}

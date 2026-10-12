@@ -1,0 +1,15 @@
+mkdir /dev
+mkdir /tmp
+mkdir /proc/
+
+mirror /bin/
+mirror /lib/
+mirror /lib64/
+mirror /usr/
+mirror /etc/ld.so.cache
+mirror /etc/java*/
+mirror /etc/alternatives/
+mirror /opt/toolchains/kotlinc/
+mirror /opt/newjudge/include/
+#for hexin
+touch /hexin-userprint.log

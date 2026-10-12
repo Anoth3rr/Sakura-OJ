@@ -1,0 +1,11 @@
+clang++
+-std=c++17
+-I/opt/newjudge/include/
+-O2
+-Wsign-compare
+-DONLINE_JUDGE
+-Wc++11-extensions
+-Werror=return-type
+-o
+$exe
+$src

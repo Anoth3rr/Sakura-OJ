@@ -1,0 +1,6 @@
+/opt/judge-client/front_loader
+5
+$src
+/opt/judge-client/include/js/
+--platform
+offscreen

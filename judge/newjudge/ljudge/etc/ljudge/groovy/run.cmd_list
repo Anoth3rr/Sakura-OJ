@@ -1,0 +1,5 @@
+java
+-Xmx$jvmmemory
+-cp
+.:/opt/toolchains/groovy-3.0.6/lib/*:/opt/newjudge/include/*:/opt/newjudge/include
+Main

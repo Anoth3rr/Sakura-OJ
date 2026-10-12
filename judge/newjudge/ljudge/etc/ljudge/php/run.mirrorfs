@@ -1,0 +1,12 @@
+mkdir /dev
+mkdir /tmp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+# for topcoder
+mirror /usr/local/lib/php{,[0-9]*}/
+mirror /usr/local/bin/php{,[0-9]*}
+mirror /usr/local/lib/php.ini
+touch /hexin-userprint.log

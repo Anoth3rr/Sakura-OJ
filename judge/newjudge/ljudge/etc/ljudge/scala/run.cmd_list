@@ -1,0 +1,6 @@
+bash
+/usr/bin/scala
+-J-Xss256m
+-classpath
+./:/opt/newjudge/include
+Main

@@ -1,0 +1,20 @@
+mkdir /dev
+mkdir /tmp
+mkdir /proc
+mirror /lib/
+
+mirror /lib64/
+
+mirror /usr/lib*/
+mirror /usr/local/lib/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+mirror /etc/java*/
+mirror /usr/bin/
+
+mirror /bin/
+mirror /opt/toolchains/groovy-3.0.6/
+mirror /opt/newjudge/include/*.class
+mirror /opt/newjudge/include/*.jar
+
+touch /hexin-userprint.log

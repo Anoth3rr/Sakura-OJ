@@ -1,0 +1,17 @@
+mkdir /dev/
+mkdir /proc/
+mkdir /tmp/
+mirror /bin/
+mirror /usr/
+mirror /lib/
+mirror /lib64/
+# ghc on Debian requires /var/lib/ghc
+mirror /var/lib/
+mirror /etc/ld.so.cache
+# debian
+mirror /etc/alternatives/
+# mono
+mirror /etc/mono/
+# for nowcoder
+mirror /opt/newjudge/include/NCTools.cs
+mirror /opt/newjudge/include/TCTools.cs

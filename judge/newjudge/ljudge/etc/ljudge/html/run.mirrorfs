@@ -1,0 +1,15 @@
+mkdir /dev
+mkdir /tmp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+
+# Shared rendering libraries.
+mkdir /proc
+
+#
+mirror /opt/qt5/
+mirror /opt/judge-client/front_loader
+touch /hexin-userprint.log

@@ -1,0 +1,12 @@
+mkdir /dev
+mkdir /tmp
+# must random
+mirror /dev/random
+mirror /lib/
+mirror /lib64/
+mirror /usr/include/
+mirror /usr/lib*/
+mirror /usr/local/lib/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+touch /hexin-userprint.log

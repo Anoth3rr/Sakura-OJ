@@ -1,0 +1,11 @@
+mkdir /dev
+mkdir /tmp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /usr/local/lib/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+mirror /usr/local/bin/ruby*
+mirror /opt/newjudge/include/*.rb
+touch /hexin-userprint.log

@@ -1,0 +1,9 @@
+mkdir /dev
+mkdir /tmp
+mirror /dev/urandom
+mirror /lib/
+mirror /lib64/
+mirror /usr/
+mirror /etc/ld.so.cache
+mirror /etc/alternatives/
+# required by matlab && octave

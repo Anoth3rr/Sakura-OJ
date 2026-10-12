@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>Sakura OJ</title>
+    <link rel="stylesheet" href="/assets/styles.css?v=four-digit-ids-20261007" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Sakura OJ 首页">
+          <span class="brand-mark">S</span>
+          <span>
+            <strong>Sakura OJ</strong>
+            <small>练习 · 提交 · 成长</small>
+          </span>
+        </a>
+        <nav class="top-nav" aria-label="主导航">
+          <a class="active" href="#problems">题库</a>
+          <a href="#submissions" id="nav-submissions">我的提交</a>
+          <a href="/studio/" id="nav-studio">录题工作台</a><a href="/team/" id="nav-team">集训队</a>
+          <a href="#manage-problems" id="nav-manage-problems" class="is-hidden">管理题库</a>
+        </nav>
+        <div class="topbar-tools">
+          <div class="service-state"><span class="state-dot"></span><span id="service-label">服务正常</span></div>
+          <div class="account-area" id="account-area">
+            <button class="topbar-button" id="login-button" type="button">登录</button>
+            <button class="topbar-button topbar-button-primary" id="register-button" type="button">注册</button>
+            <div class="account-profile is-hidden" id="account-profile">
+              <span class="account-name" id="account-name"></span>
+              <span class="account-role" id="account-role"></span>
+              <button class="topbar-button" id="logout-button" type="button">退出</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="workspace" id="problems">
+        <section class="problem-library" id="problem-library" aria-labelledby="library-title">
+          <div class="rail-heading">
+            <div>
+              <p class="eyebrow">练习空间</p>
+              <h1 id="library-title">题库</h1>
+            </div>
+            <button class="icon-button" id="refresh-button" title="刷新题库" aria-label="刷新题库">↻</button>
+          </div>
+          <div class="library-toolbar"><div class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="search-input" type="search" placeholder="搜索题目、题目 ID 或 slug" autocomplete="off" />
+          </div>
+          <div class="filter-row" role="group" aria-label="难度筛选">
+            <button class="filter-chip active" data-difficulty="">全部</button>
+            <button class="filter-chip" data-difficulty="入门">入门</button>
+            <button class="filter-chip" data-difficulty="进阶">进阶</button>
+            <button class="filter-chip" data-difficulty="困难">困难</button>
+          </div>
+          </div>
+          <div class="rail-summary">
+            <span><b id="problem-count">0</b> 道题目</span>
+            <span>点击预览查看题面并提交解答</span>
+          </div>
+          <div class="library-table-wrap"><table class="library-table" aria-label="题库列表">
+            <thead><tr><th scope="col">题目 ID</th><th scope="col">题目</th><th scope="col">题型</th><th scope="col">难度</th><th scope="col" class="numeric">提交次数</th><th scope="col" class="numeric">通过率</th><th scope="col">操作</th></tr></thead>
+            <tbody id="problem-list" aria-live="polite"></tbody>
+          </table></div>
+          <p id="library-feedback" class="auth-feedback" role="status"></p>
+          <div class="library-pagination"><span id="page-summary"></span><div><button class="ghost-button" id="previous-page" type="button">上一页</button><span id="page-number"></span><button class="ghost-button" id="next-page" type="button">下一页</button></div></div>
+        </section>
+
+        <section class="main-pane is-hidden" id="problem-detail">
+          <div class="detail-navigation"><a class="text-link" href="#problems">← 返回题库列表</a></div>
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">⌘</div>
+            <p class="eyebrow">Sakura OJ</p>
+            <h2>从一道题开始</h2>
+            <p>题面、编辑器和判题结果会在这里组成一张专注的工作台。</p>
+          </div>
+
+          <div class="problem-view is-hidden" id="problem-view">
+            <header class="problem-header">
+              <div class="problem-heading">
+                <h1 id="problem-title"></h1>
+                <dl class="metric-strip">
+                  <div><dt>提交</dt><dd id="problem-submissions"></dd></div>
+                  <div><dt>通过</dt><dd id="problem-accepted"></dd></div>
+                  <div><dt>时间限制</dt><dd id="problem-time"></dd></div>
+                  <div><dt>内存限制</dt><dd id="problem-memory"></dd></div>
+                </dl>
+              </div>
+              <div class="problem-navigation">
+                <div class="tabs" role="tablist" aria-label="题目页面">
+                  <button class="tab active" id="statement-tab" data-tab="statement" role="tab" aria-controls="statement-panel" aria-selected="true">题目详情</button>
+                  <button class="tab" id="editor-tab" data-tab="editor" role="tab" aria-controls="editor-panel" aria-selected="false" tabindex="-1">提交代码</button>
+                  <button class="tab" id="history-tab" data-tab="history" role="tab" aria-controls="history-panel" aria-selected="false" tabindex="-1">提交记录</button>
+                </div>
+                <button class="primary-button" id="open-editor" type="button">提交答案</button>
+              </div>
+            </header>
+
+            <div class="content-grid">
+              <div class="problem-main">
+                <article class="statement-panel tab-panel" id="statement-panel" role="tabpanel" aria-labelledby="statement-tab" tabindex="0"></article>
+              <section class="editor-panel tab-panel is-hidden" id="editor-panel" role="tabpanel" aria-labelledby="editor-tab" tabindex="0">
+                <div class="editor-heading">
+                  <div>
+                    <p class="eyebrow">提交代码</p>
+                    <h3>写下你的解法</h3>
+                  </div>
+                  <div class="editor-actions">
+                    <button class="editor-template-button" id="open-code-template" type="button">代码模板</button>
+                    <select id="language-select" aria-label="编程语言">
+                      <option value="c">C 17</option>
+                      <option value="cpp" selected>C++ 17</option>
+                      <option value="pypy">PyPy 3</option>
+                      <option value="java">Java</option>
+                    </select>
+                  </div>
+                </div>
+                <textarea id="code-editor" spellcheck="false" aria-label="源代码" placeholder="在这里编写或粘贴代码，也可通过「代码模板」设置个人模板。"></textarea>
+                <div class="editor-footer">
+                  <span id="editor-size">0 B</span>
+                  <button class="primary-button" id="submit-button"><span>提交判题</span><b>↗</b></button>
+                </div>
+                <div class="submission-card is-hidden" id="submission-card" aria-live="polite">
+                  <div class="submission-card-head">
+                    <div><span class="eyebrow">最近一次提交</span><strong id="submission-verdict"></strong></div>
+                    <span class="status-badge" id="submission-status"></span>
+                  </div>
+                  <p id="submission-message"></p>
+                  <div class="progress-track"><span id="submission-progress"></span></div>
+                  <div class="result-table-wrap" id="result-table-wrap"></div>
+                </div>
+              </section>
+                <section class="statement-panel tab-panel is-hidden" id="history-panel" role="tabpanel" aria-labelledby="history-tab" tabindex="0"></section>
+              </div>
+              <aside class="problem-sidebar" aria-label="题目信息与导航">
+                <section class="side-card">
+                  <h2>题目信息</h2>
+                  <dl class="problem-info">
+                    <div><dt>题目类型</dt><dd id="problem-mode"></dd></div>
+                    <div><dt>难度</dt><dd><span class="difficulty-badge" id="problem-difficulty"></span></dd></div>
+                    <div><dt>通过率</dt><dd id="problem-rate"></dd></div>
+                  </dl>
+                  <div class="side-actions"><button id="view-history" type="button">查看提交记录 <span aria-hidden="true">↗</span></button></div>
+                </section>
+                <nav class="side-card problem-outline" id="problem-outline-card" aria-label="题目目录">
+                  <h2>题目目录</h2>
+                  <div id="problem-outline"></div>
+                </nav>
+              </aside>
+            </div>
+          </div>
+        </section>
+        <section class="submissions-page is-hidden" id="submissions-page" aria-labelledby="submissions-title">
+          <div class="rail-heading"><div><p class="eyebrow">评测记录</p><h1 id="submissions-title">提交记录</h1><p class="library-description" id="submissions-summary">最近 100 条提交记录</p></div><a class="ghost-button" href="#problems">返回题库</a></div>
+          <div class="library-table-wrap"><table class="library-table" aria-label="提交记录列表"><thead><tr><th scope="col">提交 ID</th><th scope="col">题目</th><th scope="col">语言</th><th scope="col">结果</th><th scope="col">分数</th><th scope="col">提交时间</th><th scope="col">操作</th></tr></thead><tbody id="submissions-rows"></tbody></table></div>
+        </section>
+        <section class="bank-page is-hidden" id="problem-bank-page" aria-labelledby="problem-bank-title">
+          <div class="rail-heading"><div><p class="eyebrow">题目管理</p><h1 id="problem-bank-title">管理题库</h1><p class="library-description">统一管理已录入题目，点击编辑进入完整题面与评测配置。</p></div><div class="library-heading-actions"><a class="ghost-button" href="/studio/">＋ 录入新题</a><button class="primary-button" id="open-problem-add" type="button">＋ 添加到题库</button></div></div>
+          <div class="library-toolbar"><div class="search-box"><span aria-hidden="true">⌕</span><input id="bank-search" type="search" placeholder="搜索题目 ID 或标题" aria-label="筛选管理题目" /></div><label class="bank-status-filter">状态<select id="bank-status" aria-label="筛选题目状态"><option value="active">全部题目</option><option value="listed">已在题库</option><option value="unlisted">未加入题库</option><option value="trashed">回收站</option></select></label></div>
+          <div class="rail-summary"><span><b id="bank-count">0</b> 道题目</span><span>删除仅移出题库，保留草稿与历史提交</span></div>
+          <div class="library-table-wrap"><table class="library-table bank-table" aria-label="管理题库列表"><thead><tr><th scope="col">题目 ID</th><th scope="col">题目</th><th scope="col">题型</th><th scope="col">难度</th><th scope="col" class="numeric">提交次数</th><th scope="col" class="numeric">通过率</th><th scope="col">状态</th><th scope="col">操作</th></tr></thead><tbody id="bank-rows" aria-live="polite"></tbody></table></div>
+          <p class="auth-feedback" id="bank-feedback" role="status"></p>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Sakura OJ · 本地开发版</span>
+        <span>API <code>/docs</code></span>
+      </footer>
+    </div>
+    <div class="toast is-hidden" id="toast" role="status"></div>
+    <dialog class="users-dialog code-template-dialog" id="code-template-dialog" aria-labelledby="code-template-title">
+      <form class="users-dialog-inner" id="code-template-form">
+        <div class="record-dialog-head">
+          <div><p class="eyebrow">编辑器设置</p><h2 id="code-template-title">个人代码模板</h2></div>
+          <button class="icon-button" id="close-code-template" type="button" aria-label="关闭代码模板">×</button>
+        </div>
+        <p class="auth-hint">模板按账号和语言保存在当前浏览器。未设置时，提交代码区默认为空白。</p>
+        <div class="template-toolbar"><strong id="template-language-name"></strong><div><button class="text-link" id="copy-editor-template" type="button">从当前代码复制</button><button class="text-link" id="clear-code-template" type="button">清空</button></div></div>
+        <textarea id="template-code" spellcheck="false" aria-label="模板代码" placeholder="写下这一语言的个人模板；留空保存可取消模板。"></textarea>
+        <p class="auth-hint">新题目自动载入对应语言的模板；当前正在编写的代码会保留。其他语言请在提交区切换后设置。</p>
+        <p class="auth-feedback" id="template-feedback" role="status"></p>
+        <div class="record-dialog-footer"><button class="ghost-button" id="cancel-code-template" type="button">取消</button><button class="primary-button" type="submit">保存模板</button></div>
+      </form>
+    </dialog>
+    <dialog class="auth-dialog" id="auth-dialog" aria-labelledby="auth-title">
+      <form id="auth-form" method="dialog">
+        <div class="record-dialog-head">
+          <div>
+            <p class="eyebrow">Sakura 账户</p>
+            <h2 id="auth-title">登录</h2>
+          </div>
+          <button class="icon-button" id="close-auth" type="button" title="关闭" aria-label="关闭">×</button>
+        </div>
+        <div class="auth-switch" role="tablist" aria-label="账户操作">
+          <button type="button" class="auth-switch-button active" data-auth-mode="login">登录</button>
+          <button type="button" class="auth-switch-button" data-auth-mode="register">注册学生账号</button>
+        </div>
+        <div class="auth-fields">
+          <label>用户名<input id="auth-username" name="username" required autocomplete="username" /></label>
+          <label id="auth-display-name-label" class="is-hidden">显示名称<input id="auth-display-name" name="display_name" autocomplete="name" /></label>
+          <label>密码<input id="auth-password" name="password" type="password" required autocomplete="current-password" /></label>
+        </div>
+        <p class="auth-hint" id="auth-hint">管理员创建的账号可直接登录。</p>
+        <p class="auth-feedback" id="auth-feedback" role="status"></p>
+        <div class="record-dialog-footer">
+          <span></span>
+          <button class="primary-button" id="auth-submit" type="submit"><span>登录</span><b>↗</b></button>
+        </div>
+      </form>
+    </dialog>
+    <dialog class="users-dialog" id="problem-add-dialog" aria-labelledby="problem-add-title">
+      <div class="users-dialog-inner">
+        <div class="record-dialog-head"><div><p class="eyebrow">题库管理</p><h2 id="problem-add-title">添加题目</h2></div><button class="icon-button" id="close-problem-add" type="button" aria-label="关闭添加题目">×</button></div>
+        <p class="auth-hint">填写唯一题目 ID，或选择已录入题目。首次添加须完成数据生成与验证。</p>
+        <form id="problem-bank-form" class="bank-add-form">
+          <label>题目 ID<input id="bank-code" name="problem_code" required placeholder="例如 0001" maxlength="20" autocomplete="off" /></label>
+          <button class="primary-button" id="bank-add-button" type="submit">添加到题库</button>
+          <label class="bank-wide">或选择已录入题目<select id="bank-select"><option value="">请选择题目</option></select></label>
+        </form>
+        <p class="auth-feedback" id="bank-add-feedback" role="status"></p>
+      </div>
+    </dialog>
+    <dialog class="auth-dialog" id="management-confirm" aria-labelledby="management-confirm-title">
+      <div class="users-dialog-inner"><h2 id="management-confirm-title"></h2><p class="auth-hint" id="management-confirm-text"></p><div class="record-dialog-footer"><button class="ghost-button" id="cancel-management" type="button">取消</button><button class="danger-button" id="confirm-management" type="button">确认删除</button></div></div>
+    </dialog>
+    <dialog class="users-dialog" id="users-dialog" aria-labelledby="users-title">
+      <div class="users-dialog-inner">
+        <div class="record-dialog-head">
+          <div>
+            <p class="eyebrow">权限中心</p>
+            <h2 id="users-title">账号与角色</h2>
+          </div>
+          <button class="icon-button" id="close-users" type="button" title="关闭" aria-label="关闭">×</button>
+        </div>
+        <div class="users-list" id="users-list"></div>
+        <p class="auth-hint">删除账号后立即退出所有登录会话，历史提交保留，原用户名保留且不可重新注册。</p>
+        <p class="auth-feedback" id="users-feedback" role="status"></p>
+        <form class="user-create-form" id="user-create-form">
+          <strong>创建账号</strong>
+          <div class="user-create-grid">
+            <input name="username" required minlength="3" maxlength="32" placeholder="用户名" />
+            <input name="display_name" maxlength="80" placeholder="显示名称" />
+            <input name="password" required minlength="8" type="password" placeholder="初始密码（至少 8 位）" />
+            <select name="role" aria-label="账号角色">
+              <option value="student">学生</option>
+              <option value="teacher">老师</option>
+              <option value="problem_admin">题目管理员</option>
+              <option value="admin">管理员</option>
+            </select>
+          </div>
+          <button class="primary-button" type="submit"><span>创建账号</span><b>↗</b></button>
+        </form>
+      </div>
+    </dialog>
+    <link rel="stylesheet" href="/assets/vendor/katex.min.css" />
+    <script defer src="/assets/vendor/katex.min.js"></script>
+    <script type="module" src="/assets/app.js?v=four-digit-ids-20261007"></script>
+  </body>
+</html>

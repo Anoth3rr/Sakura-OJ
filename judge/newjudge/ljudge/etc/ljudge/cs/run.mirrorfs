@@ -1,0 +1,10 @@
+mkdir /dev
+mkdir /tmp
+mirror /lib/
+mirror /lib64/
+mirror /usr/lib*/
+mirror /etc/
+mirror /usr/bin/mono{,-sgen}
+# mono requires /proc
+mkdir /proc
+touch /hexin-userprint.log

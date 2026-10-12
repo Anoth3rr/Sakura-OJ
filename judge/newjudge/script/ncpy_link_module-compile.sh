@@ -1,0 +1,1 @@
+sudo c++ -O3 -Wall -shared -std=c++11 -fPIC $(python -m pybind11 --includes)  /opt/newjudge/include/ncpy_link_module.cpp -o /opt/newjudge/include/ncpy_link_module.so

@@ -1,0 +1,15 @@
+mkdir /dev/
+mkdir /proc/
+mkdir /tmp/
+mirror /bin/
+mirror /usr/
+mirror /lib/
+mirror /lib64/
+# ghc on Debian requires /var/lib/ghc
+mirror /var/lib/
+mirror /etc/ld.so.cache
+# debian
+mirror /etc/alternatives/
+# for topcoder 
+mirror /opt/newjudge/include/*.h
+mirror /opt/newjudge/script/cpp-compile.sh

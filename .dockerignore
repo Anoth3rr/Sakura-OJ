@@ -1,0 +1,22 @@
+# The judge image only needs application source and its public assets.
+**
+!Dockerfile.judge
+!app/
+!app/**
+**/__pycache__/**
+**/*.pyc
+**/.env
+**/.env.*
+**/*.env
+**/*.pem
+**/*.key
+**/*.sqlite*
+**/*.db
+**/*.log
+**/*.zip
+**/verification.json
+**/data/**
+**/runtime/**
+**/backups/**
+**/test-results/**
+

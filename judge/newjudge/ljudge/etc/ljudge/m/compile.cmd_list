@@ -1,0 +1,14 @@
+clang
+-o
+$exe
+$src
+-I
+/usr/include/GNUstep
+-L
+/usr/lib
+-lgnustep-base
+-fconstant-string-class=NSConstantString
+-D_NATIVE_OBJC_EXCEPTIONS
+-lobjc
+-lm
+-I /usr/local/include
